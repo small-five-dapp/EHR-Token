@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-contract EHRToken {
+contract EHRToken is IERC20 {
     mapping(address => uint256) private balances;
     mapping(address => mapping(address => uint256)) private allowances_;
     uint256 private totalSupply_;
@@ -20,35 +20,35 @@ contract EHRToken {
     /**
      * @dev Returns the name of the token.
      */
-    function name() public view returns (string memory) {
+    function name() public view virtual returns (string memory) {
         return name_;
     }
 
     /**
      *  @dev Returns the symbol of the token.
      */
-    function symbol() public view returns (string memory) {
+    function symbol() public view virtual returns (string memory) {
         return symbol_;
     }
 
     /**
      * @dev Returns the number of decimal places the token uses.
      */
-    function decimals() public view returns (uint8) {
+    function decimals() public view virtual returns (uint8) {
         return 18;
     }
 
     /**
      * @dev Returns the total token supply.
      */
-    function totalSupply() public view returns (uint256) {
+    function totalSupply() public view virtual override returns (uint256) {
         return totalSupply_;
     }
 
     /**
      * @dev Returns the account balance of another account with address _owner.
      */
-     function balanceOf(address _owner) public view returns (uint256) {
+     function balanceOf(address _owner) public view virtual override returns (uint256) {
         return balances[_owner];
      }
 
@@ -57,7 +57,7 @@ contract EHRToken {
      * Transfer event. The function SHOULD throw is the message caller's account balance
      * does not have enough tokens to spend.
      */
-    function transfer(address _to, uint256 _value) public returns (bool success) {
+    function transfer(address _to, uint256 _value) public virtual override returns (bool success) {
         _transfer(msg.sender, _to, _value);
         return true;
     }
@@ -67,7 +67,7 @@ contract EHRToken {
      * Transfer event. The function SHOULD throw unless the _from account has deliberately
      * autorized the sender of the message via some mechanism.
      */
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+    function transferFrom(address _from, address _to, uint256 _value) public virtual override returns (bool success)
     {
         require(msg.sender == _from, "You are not the owner of the _from address.");
         // FIXME: add functionality so that address _from can have a list of "approved" senders who
@@ -83,7 +83,7 @@ contract EHRToken {
      * @dev Allows _spender to withdraw from your account multiple times, up to the _value amount.
      * If this function is called again it overwrites the current allowance with _value.
      */
-    function approve(address _spender, uint256 _value) public returns (bool success) {
+    function approve(address _spender, uint256 _value) public virtual override returns (bool success) {
         _approve(msg.sender, _spender, _value);
         return true;
     }
@@ -91,7 +91,7 @@ contract EHRToken {
     /**
      * @dev Returns the amount which _spender is still allowed to withdraw from _owner.
      */
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) public view virtual override returns (uint256 remaining) {
         return allowances_[_owner][_spender]; 
     }
 
